@@ -3,11 +3,11 @@ pr:
 
 stages:
 
-- stage: 'test
+- stage: test
 
   jobs:
 
-    - job: 'Linux'
+    - job: Linux
       timeoutInMinutes: 0
       pool:
         vmImage: 'ubuntu-latest'
@@ -52,7 +52,7 @@ stages:
           py.test pygenometracks --doctest-modules -n 4
         displayName: pytest
 
-    - job: 'OSX'
+    - job: OSX
       timeoutInMinutes: 0
       pool:
         vmImage: 'macOS-11'
@@ -102,7 +102,7 @@ stages:
         displayName: pytest
 
 
-- stage: 'deploy'
+- stage: deploy
   - ${{ if startsWith(variables['Build.SourceBranch'], 'refs/tags/test') }}:
     - stage: Deploy
       dependsOn: [test]
