@@ -101,23 +101,21 @@ stages:
           py.test pygenometracks --doctest-modules -n 4
         displayName: pytest
 
-
-- stage: deploy
-  - ${{ if startsWith(variables['Build.SourceBranch'], 'refs/tags/test') }}:
-    - stage: Deploy
-      dependsOn: [test]
-      condition: succeeded()
-      jobs:
-      - job: testpypi
-        pool:
-          vmImage: 'Ubuntu-latest'
-        container: python:3.8
-        steps:
-        - script: |
-            python setup.py sdist bdist_wheel
-            python -m pip install --user --upgrade twine
-            python -m twine upload -r testpypi dist/*
-          env:
-            TWINE_USERNAME: $(TWINE_TEST_USERNAME)
-            TWINE_PASSWORD: $(TWINE_TEST_PASSWORD)
-          displayName: 'Push to Python Package Index'
+- ${{ if startsWith(variables['Build.SourceBranch'], 'refs/tags/test') }}:
+  - stage: Deploy
+    dependsOn: [test]
+    condition: succeeded()
+    jobs:
+    - job: testpypi
+      pool:
+        vmImage: 'Ubuntu-latest'
+      container: python:3.8
+      steps:
+      - script: |
+          python setup.py sdist bdist_wheel
+          python -m pip install --user --upgrade twine
+          python -m twine upload -r testpypi dist/*
+        env:
+          TWINE_USERNAME: $(TWINE_TEST_USERNAME)
+          TWINE_PASSWORD: $(TWINE_TEST_PASSWORD)
+        displayName: 'Push to Python Package Index'
