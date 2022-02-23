@@ -101,7 +101,7 @@ stages:
           py.test pygenometracks --doctest-modules -n 4
         displayName: pytest
 
-- ${{ if startsWith(variables['Build.SourceBranch'], 'refs/tags/test') }}:
+- ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/test_deploy_pypi') }}:
   - stage: Deploy
     dependsOn: [test]
     condition: succeeded()
@@ -114,7 +114,7 @@ stages:
       - script: |
           python setup.py sdist bdist_wheel
           python -m pip install --user --upgrade twine
-          python -m twine upload -r testpypi dist/*
+          python -m twine upload -r testpypi --skip-existing dist/*
         env:
           TWINE_USERNAME: $(TWINE_TEST_USERNAME)
           TWINE_PASSWORD: $(TWINE_TEST_PASSWORD)
