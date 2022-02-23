@@ -13,7 +13,7 @@ stages:
       - script: |
           python setup.py sdist bdist_wheel
           python -m pip install --user --upgrade twine
-          python -m twine upload -r testpypi --skip-existing dist/*
+          python -m twine upload -r testpypi dist/*
         env:
           TWINE_USERNAME: $(TWINE_TEST_USERNAME)
           TWINE_PASSWORD: $(TWINE_TEST_PASSWORD)
